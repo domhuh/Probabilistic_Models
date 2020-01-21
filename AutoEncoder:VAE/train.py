@@ -27,11 +27,11 @@ if __name__ == "__main__":
 	img = ae.predict(before).reshape(8,8)
 	plt.imshow(before.reshape(8,8))
 	plt.imshow(img.reshape(8,8))
-	plt.imshow(rx.reshape(8,8))
+	plt.imshow(rx[0].reshape(8,8))
 
 	print("Running inference on VAE")
 	before = rx[0][None,:]+np.random.uniform(-0.5,0.5,[64])[None,:]
 	img = vae.predict(before).reshape(8,8)
 	plt.imshow(before.reshape(8,8))
 	plt.imshow(img.reshape(8,8))
-	plt.imshow(rx.reshape(8,8))
+	plt.imshow(rx[0].reshape(8,8))

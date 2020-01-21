@@ -1,3 +1,4 @@
+import tensorflow as tf
 from tensorflow.keras import Model, Sequential
 from tensorflow.keras.layers import Dense
 import tensorflow_probability as tfp
@@ -20,6 +21,8 @@ def kl_reg(wm):
     return 1e-3 * tfp.distributions.kl_divergence(tfp.distributions.Normal(u,std),
                      tfp.distributions.Normal(0,1))
 
+
+
 class VAE(AutoEncoder):
     def __init__(self):
         super().__init__()
@@ -27,3 +30,13 @@ class VAE(AutoEncoder):
                                   Dense(16, activation = 'sigmoid'),
                                   Dense(8, activation = 'sigmoid',
                                         kernel_regularizer = kl_reg)])
+    def call(self, X):
+        fm = self.encode(X)
+        #print(fm.shape)
+        samples = tfp.distributions.Sample(
+                    tfp.distributions.Independent(
+                        tfp.distributions.Normal(tf.math.reduce_mean(fm),tf.math.reduce_std(fm))
+                    ),
+                sample_shape=(8)).sample()[None,:]
+        return self.decode(samples)
+
